@@ -20,14 +20,7 @@ if (Meteor.isClient) {
           value = target.value.value;
 
       // Insert an expense into the collection
-      Expenses.insert({
-        text: text,
-        category: category,
-        value: value,
-        createdAt: new Date(),
-        owner: Meteor.userId(),           // _id of logged in user
-        username: Meteor.user().username  // username of logged in user
-      });
+      Meteor.call("addExpense", text, category, value);
 
       // Clear form
       event.target.text.value = "";
@@ -38,7 +31,7 @@ if (Meteor.isClient) {
 
   Template.expense.events({
     "click .delete": function () {
-      Expenses.remove(this._id);
+      Meteor.call("deleteExpense", this._id);
     }
   });
 
@@ -46,3 +39,24 @@ if (Meteor.isClient) {
     passwordSignupFields: "USERNAME_ONLY"
   });
 }
+
+Meteor.methods({
+ addExpense: function (text, category, value) {
+   // Make sure the user is logged in before inserting an expense
+   if (! Meteor.userId()) {
+     throw new Meteor.Error("not-authorized");
+   }
+
+   Expenses.insert({
+     text: text,
+     category: category,
+     value: value,
+     createdAt: new Date(),
+     owner: Meteor.userId(),           // _id of logged in user
+     username: Meteor.user().username  // username of logged in user
+   });
+ },
+ deleteExpense: function (expenseId) {
+   Expenses.remove(expenseId);
+ }
+});
