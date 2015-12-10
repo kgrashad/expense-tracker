@@ -1,6 +1,16 @@
 Expenses = new Mongo.Collection("expenses");
 
+if (Meteor.isServer) {
+
+  // This code only runs on the server
+  Meteor.publish("expenses", function () {
+    return Expenses.find();
+  });
+}
+
 if (Meteor.isClient) {
+  Meteor.subscribe("expenses");
+
   // This code only runs on the client
   Template.body.helpers({
     expenses: function(){
