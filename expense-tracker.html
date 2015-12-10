@@ -1,14 +1,25 @@
 <head>
-  <title>expense-tracker</title>
+  <title>My Expenses</title>
 </head>
 
 <body>
-  <h1>Welcome to Meteor! Hack4Egypt!</h1>
+  <div class="container">
+    <header>
+      <h1>My Expenses</h1>
+    </header>
 
-  {{> hello}}
+    <table class="table">
+      {{#each expenses}}
+        {{> expense}}
+      {{/each}}
+    </table>
+  </div>
 </body>
 
-<template name="hello">
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
+<template name="expense">
+  <tr>
+    <td>{{text}}</td>
+    <td>{{category}}</td>
+    <td>{{value}}</td>
+  </tr>
 </template>
